@@ -1,0 +1,30 @@
+-- CreateTable
+CREATE TABLE "potential_participants" (
+    "id" SERIAL NOT NULL,
+    "first_name" VARCHAR(100),
+    "last_name" VARCHAR(100),
+    "phone_number" VARCHAR(20),
+    "email" VARCHAR(50),
+    "county" VARCHAR(100),
+    "zip" VARCHAR(20),
+    "referrer_first_name" VARCHAR(100),
+    "referrer_last_name" VARCHAR(100),
+    "referrer_phone" VARCHAR(20),
+    "referrer_email" VARCHAR(100),
+    "referral_source" VARCHAR(100),
+    "referral_business_name" VARCHAR(100),
+    "client_of_mdrrs" BOOLEAN,
+    "staff_submit_referral_to_mdrrs" BOOLEAN,
+    "release_info_consent_mdrrs" BOOLEAN,
+    "long_covid_syndrome" BOOLEAN,
+    "is_ms_resident" BOOLEAN,
+    "is_age_16_to_70" BOOLEAN,
+    "desire_to_continue_work" VARCHAR(100),
+    "wants_to_work_if_unemployed" BOOLEAN,
+    "not_involving_other_off" BOOLEAN,
+    "current_mdrrs_client_character" VARCHAR(100),
+    "started_at" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
+    "submitted_at" TIMESTAMPTZ(6),
+
+    CONSTRAINT "potential_participants_pkey" PRIMARY KEY ("id")
+);

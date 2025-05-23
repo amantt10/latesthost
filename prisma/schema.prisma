@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model potential_participants {
+  id                             Int       @id @default(autoincrement())
+  eligibility_criteria           String?   
+  first_name                     String?   
+  last_name                      String?   
+  phone_number                   String?   
+  email                          String?   
+  county                         String?  
+  zip                            String?  
+  referrer_first_name            String?   
+  referrer_last_name             String?   
+  referrer_phone                 String?   
+  referrer_email                 String?  
+  referral_source                String?   
+  referral_business_name         String?  
+  client_of_mdrrs                String?
+  staff_submit_referral_to_mdrrs String?
+  release_info_consent_mdrrs     String?
+  long_covid_syndrome            String?
+  is_ms_resident                 String?
+  is_age_16_to_70                String?
+  desire_to_continue_work        String?  
+  wants_to_work_if_unemployed    String?   
+  not_involving_other_off        String?   
+  submitted_at                   DateTime? @db.Timestamptz(6)
+}
