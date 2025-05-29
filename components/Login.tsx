@@ -1,16 +1,33 @@
 "use client";
 import React, { useState } from "react";
-
 import { cn } from "@/lib/utils";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export function Login() {
   const router = useRouter();
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form submitted");
+    setError("");
+
+    const email = (e.currentTarget.elements.namedItem("email") as HTMLInputElement).value;
+    const password = (e.currentTarget.elements.namedItem("password") as HTMLInputElement).value;
+
+    const res = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    });
+
+    if (res?.ok) {
+      router.push("/Adminpage");
+    } else {
+      setError("Invalid email or password.");
+    }
   };
 
   return (
@@ -25,20 +42,19 @@ export function Login() {
       <form className="my-8" onSubmit={handleSubmit}>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
-          <Input id="email" placeholder="projectmayhem@fc.com" type="email" />
+          <Input id="email" name="email" placeholder="projectmayhem@fc.com" type="email" />
         </LabelInputContainer>
 
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" placeholder="••••••••" type="password" />
+          <Input id="password" name="password" placeholder="••••••••" type="password" />
         </LabelInputContainer>
+
+        {error && <div className="text-red-500 mb-2">{error}</div>}
 
         <button
           className="bg-[#5D1725] relative group/btn w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
           type="submit"
-            onClick={() => {
-                router.push("/Adminpage");
-            }}
         >
           Login &rarr;
           <BottomGradient />

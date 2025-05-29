@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { FiHome, FiUsers, FiCheckCircle, FiEdit2, FiTrash2 } from 'react-icons/fi';
+import { FiHome, FiUsers, FiCheckCircle, FiEdit2, FiTrash2, FiUser } from 'react-icons/fi';
 import {
     Table,
     TableBody,
@@ -17,6 +17,7 @@ const sidebarItems = [
   { name: 'Home', icon: <FiHome size={20} /> },
   { name: 'Patients', icon: <FiUsers size={20} /> },
   { name: 'Approved', icon: <FiCheckCircle size={20} /> },
+  { name: 'Profile', icon: <FiUser size={20} /> },
 ];
 
 const HomePage = () => (
@@ -84,10 +85,177 @@ const ApprovedPage = () => (
   </div>
 );
 
+const ProfilePage = () => {
+  const [profile, setProfile] = useState({
+    firstName: "Admin",
+    lastName: "User",
+    email: "machphbi@gmail.com",
+  });
+  const [editingField, setEditingField] = useState<null | "firstName" | "lastName" | "email">(null);
+  const [formValue, setFormValue] = useState("");
+
+  const handleEdit = (field: "firstName" | "lastName" | "email") => {
+    setEditingField(field);
+    setFormValue(profile[field]);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormValue(e.target.value);
+  };
+
+  const handleSave = async () => {
+    if (editingField) {
+      const updatedProfile = { ...profile, [editingField]: formValue };
+      // Build the name string as expected by your API
+      const name = `${updatedProfile.firstName} ${updatedProfile.lastName}`.trim();
+
+      try {
+        await fetch('/api/admin/update_profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            title: "", // or updatedProfile.title if you have it
+            organization: "", // or updatedProfile.organization if you have it
+          }),
+        });
+        setProfile(updatedProfile);
+        setEditingField(null);
+      } catch (err) {
+        alert('Error saving profile');
+      }
+    }
+  };
+
+  const handleCancel = () => {
+    setEditingField(null);
+    setFormValue("");
+  };
+
+  return (
+    <div>
+      <h3 className="text-3xl font-bold mb-6">Profile</h3>
+      <div className="bg-white rounded-xl shadow p-8 min-h-[300px]">
+        <div className="space-y-4">
+          {/* First Name */}
+          <div className="flex items-center gap-2">
+            <label className="block text-gray-700 font-medium mb-1 w-32">First Name</label>
+            {editingField === "firstName" ? (
+              <>
+                <input
+                  type="text"
+                  value={formValue}
+                  onChange={handleChange}
+                  className="border rounded px-3 py-2 w-full"
+                />
+                <button
+                  className="bg-[#5d1725] text-white px-3 py-1 rounded ml-2"
+                  onClick={handleSave}
+                >
+                  Save
+                </button>
+                <button
+                  className="bg-gray-200 text-gray-700 px-3 py-1 rounded ml-1"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="text-gray-900 flex-1">{profile.firstName}</div>
+                <button
+                  className="text-[#5d1725] underline ml-2"
+                  onClick={() => handleEdit("firstName")}
+                >
+                  Edit
+                </button>
+              </>
+            )}
+          </div>
+          {/* Last Name */}
+          <div className="flex items-center gap-2">
+            <label className="block text-gray-700 font-medium mb-1 w-32">Last Name</label>
+            {editingField === "lastName" ? (
+              <>
+                <input
+                  type="text"
+                  value={formValue}
+                  onChange={handleChange}
+                  className="border rounded px-3 py-2 w-full"
+                />
+                <button
+                  className="bg-[#5d1725] text-white px-3 py-1 rounded ml-2"
+                  onClick={handleSave}
+                >
+                  Save
+                </button>
+                <button
+                  className="bg-gray-200 text-gray-700 px-3 py-1 rounded ml-1"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="text-gray-900 flex-1">{profile.lastName}</div>
+                <button
+                  className="text-[#5d1725] underline ml-2"
+                  onClick={() => handleEdit("lastName")}
+                >
+                  Edit
+                </button>
+              </>
+            )}
+          </div>
+          {/* Email */}
+          <div className="flex items-center gap-2">
+            <label className="block text-gray-700 font-medium mb-1 w-32">Email Address</label>
+            {editingField === "email" ? (
+              <>
+                <input
+                  type="email"
+                  value={formValue}
+                  onChange={handleChange}
+                  className="border rounded px-3 py-2 w-full"
+                />
+                <button
+                  className="bg-[#5d1725] text-white px-3 py-1 rounded ml-2"
+                  onClick={handleSave}
+                >
+                  Save
+                </button>
+                <button
+                  className="bg-gray-200 text-gray-700 px-3 py-1 rounded ml-1"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="text-gray-900 flex-1">{profile.email}</div>
+                <button
+                  className="text-[#5d1725] underline ml-2"
+                  onClick={() => handleEdit("email")}
+                >
+                  Edit
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const pageComponents: { [key: string]: React.ReactNode } = {
   Home: <HomePage />,
   Patients: <PatientsPage />,
   Approved: <ApprovedPage />,
+  Profile: <ProfilePage />,
 };
 
 const Dashboard = () => {

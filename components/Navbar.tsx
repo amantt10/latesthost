@@ -141,7 +141,7 @@ function Navbar({ className }: { className?: string }) {
           {/* Login & Mobile Toggle */}
           <div className="flex items-center space-x-4">
 
-          <button className="bg-[#5D1725] no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full h-12 text-sm font-semibold leading-6 text-white inline-block min-w-[150px] max-w-[200px]" onClick={() => router.push("/Adminpage/")} tabIndex={0}>
+          <button className="bg-[#5D1725] no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full h-12 text-sm font-semibold leading-6 text-white inline-block min-w-[150px] max-w-[200px]" onClick={() => router.push("/Login")} tabIndex={0}>
             <div className="relative flex justify-center items-center space-x-2 z-10 rounded-full bg-[#5D1725] px-4 h-12 ring-1 ring-white/10">
               <span>
                 Login

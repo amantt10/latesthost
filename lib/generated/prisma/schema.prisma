@@ -9,28 +9,138 @@ datasource db {
 }
 
 model potential_participants {
-  id                             Int       @id @default(autoincrement())
-  eligibility_criteria           String?
-  first_name                     String?
-  last_name                      String?
-  phone_number                   String?
-  email                          String?
-  county                         String?
-  zip                            String?
-  referrer_first_name            String?
-  referrer_last_name             String?
-  referrer_phone                 String?
-  referrer_email                 String?
-  referral_source                String?
-  referral_business_name         String?
-  client_of_mdrrs                String?
-  staff_submit_referral_to_mdrrs String?
-  release_info_consent_mdrrs     String?
-  long_covid_syndrome            String?
-  is_ms_resident                 String?
-  is_age_16_to_70                String?
-  desire_to_continue_work        String?
-  wants_to_work_if_unemployed    String?
-  not_involving_other_off        String?
-  submitted_at                   DateTime? @db.Timestamptz(6)
+  id                            Int                     @id @default(autoincrement())
+  eligibility_criteria          String?
+  first_name                    String?
+  last_name                     String?
+  phone_number                  String?
+  email                         String?
+  county                        String?
+  zip                           String?
+  referrer_first_name           String?
+  referrer_last_name            String?
+  referrer_phone                String?
+  referrer_email                String?
+  referral_source               String?
+  referral_business_name        String?
+  client_of_mdrrs               String?
+  staff_submit_referral_to_mdrs String?
+  release_info_consent_mdrs     String?
+  long_covid_syndrome           String?
+  is_ms_resident                String?
+  is_age_16_to_70               String?
+  desire_to_continue_work       String?
+  wants_to_work_if_unemployed   String?
+  not_involving_other_off       String?
+  submitted_at                  DateTime?               @db.Timestamptz(6)
+  eligibility_screening         eligibility_screening[]
 }
+
+model users {
+  id                    Int                     @id @default(autoincrement())
+  role                  String?
+  role_description      String?
+  role_capabilities     String?
+  first_name            String?
+  last_name             String?
+  email                 String?                 @unique
+  phone                 String?
+  password              String?
+  organization          String?
+  title                 String?
+  last_login            DateTime?               @db.Timestamptz(6)
+  created_at            DateTime?               @db.Timestamptz(6)
+  updated_at            DateTime?               @db.Timestamptz(6)
+  eligibility_screening eligibility_screening[]
+}
+
+model eligibility_screening {
+  // This model is used to store the eligibility screening information for potential participants
+  id                                         Int                     @id @default(autoincrement())
+  user_id                                    Int?
+  user                                       users?                  @relation(fields: [user_id], references: [id])
+  potential_participant_id                   Int?
+  potential_participant                      potential_participants? @relation(fields: [potential_participant_id], references: [id])
+  chp_partner_business                       String? // Question #11
+  contact_method                             String? // Question #12
+  history_of_contact_attempts                String? // Question #13
+  mode_of_learning_about_chp                 String? // Question #14
+  source_of_learning_about_chp               String? // Question #15
+  individual_interest_in_chp                 String? // Question #16
+  disability_accompanied_by_long_covid       String? // Question #17
+  long_covid_syndrome                        String? // Question #18
+  is_ms_resident                             String? // Question #19
+  is_age_16_to_70                            String? // Question #20
+  is_currently_employed                      String? // Question #21
+  desire_to_continue_work                    String? // Question #22
+  paid_subminimum_wage                       String? // Question #23
+  working_leave_status                       String? // Question #24
+  risk_of_losing_job                         String? // Question #25
+  how_you_hope_to_benefit_from_chp           String? // Question #26
+  interest_in_returning_to_work              String? // Question #27
+  not_involving_other_off                    String? // Question #28
+  confirmation_of_eligibility_questions      Boolean // Question #29
+  initial_contact_results                    String? // Question #30
+  reason_for_not_eligible                    String? // Question #31
+  statement_of_informed_consent              String? // Question #32
+  release_of_information_roi                 String? // Question #33
+  individual_provided_medical_information    String? // Question #34
+  status_of_receiving_medical_information    String? // Question #35
+  individual_home_address                    String? // Question #36
+  individual_birthdate                       String? // Question #37
+  eligibility_for_participation              String // Question #38
+  service_region                             String? // Question #39
+  vocational_counselor_assigned_first_name   String? // Question #40
+  vocational_counselor_assigned_last_name    String? // Question #40
+  vocational_counselors_caseload_or_waitlist String? // Question #41
+  current_client_of_mdrs_or_no               String? // Question #42
+  submit_an_mdrs_referral                    String? // Question #43
+  sharing_information_with_mdrs              String? // Question #44
+  created_at                                 DateTime                @default(now())
+  updated_at                                 DateTime                @updatedAt
+}
+
+// model not_participant{
+//   id                                                Int       @id @default(autoincrement())
+//   user_id                                           Int?
+//   user                                              users? @relation(fields: [user_id], references: [id])
+//   potential_participant_id                          Int?
+//   potential_participant                             potential_participants? @relation(fields: [potential_participant_id], references: [id])
+//   chp_partner_business                              String? // Question #11
+//   contact_method                                    String? // Question #12
+//   history_of_contact_attempts                       String? // Question #13
+//   mode_of_learning_about_chp                        String? // Question #14
+//   source_of_learning_about_chp                      String? // Question #15
+//   individual_interest_in_chp                       String? // Question #16
+//   disability_accompanied_by_long_covid             String? // Question #17
+//   long_covid_syndrome                              String? // Question #18
+//   is_ms_resident                                    String? // Question #19
+//   is_age_16_to_70                                   String? // Question #20
+//   is_currently_employed                           String? // Question #21
+//   desire_to_continue_work                         String? // Question #22
+//   paid_subminimum_wage                  String? // Question #23
+//   working_leave_status             String? // Question #24
+//   risk_of_losing_job                String? // Question #25
+//   how_you_hope_to_benefit_from_chp String? // Question #26
+//   interest_in_returning_to_work   String? // Question #27
+//   not_involving_other_off                             String? // Question #28
+//   confirmation_of_eligibility_questions             String? // Question #29
+//   initial_contact_results                           String? // Question #30
+//   reason_for_not_eligible                           String? // Question #31
+//   statement_of_informed_consent                     String? // Question #32
+//   release_of_information_roi                        String? // Question #33
+//   individual_provided_medical_information          String? // Question #34
+//   status_of_receiving_medical_information         String? // Question #35
+//   individual_home_address                           String? // Question #36
+//   individual_birthdate                              String? // Question #37
+//   eligibility_for_participation                   String? // Question #38
+//   service_region                                    String? // Question #39
+//   vocational_counselor_assigned_first_name                    String? // Question #40
+//   vocational_counselor_assigned_last_name                     String? // Question #40
+//   vocational_counselors_caseload_or_waitlist      String? // Question #41
+//   current_client_of_mdrs_or_no                     String? // Question #42
+//   submit_an_mdrs_referral                           String? // Question #43
+//   sharing_information_with_mdrs                   String? // Question #44
+//   created_at                                        DateTime  @default(now())
+//   updated_at                                        DateTime  @updatedAt
+// }
